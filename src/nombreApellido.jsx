@@ -30,7 +30,7 @@ function NombreApellido() {
             setCargando(false)
 
         } catch (error) {
-            
+            throw error
         }
     }
     const leer = async (evento) => {
@@ -65,6 +65,7 @@ function NombreApellido() {
         const {name, value} = evento.target
         setDatosFormulario({...datosFormulario,[name]:value})
     }
+    
     return(
         <>
             <h1>Registro Nombre y Apellido</h1>
