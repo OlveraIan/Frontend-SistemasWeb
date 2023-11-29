@@ -25,7 +25,7 @@ function NombreApellido()
         setCargando(true)
         await axios.post('http://localhost:4567/users/',datosFormulario)
         .then(function (res) {
-            console.log("datos en return ",res);
+            console.log("datos en response ",res.data);
             setCargando(false)
             return(res.data);
             
@@ -37,9 +37,9 @@ function NombreApellido()
     }
     const leer = async (evento) => {
         evento.preventDefault()
-        await axios.get('http://localhost:4567/users/',Id)
+        await axios.get('http://localhost:4567/users/'+Id.id)
         .then(function (res) {
-            console.log("datos en return ",res);
+            console.log("datos en response ",res.data);
             setCargando(false)
             return(res.data);
             
@@ -51,13 +51,12 @@ function NombreApellido()
     }
     const actualizar = async (evento) => {
         evento.preventDefault()
-        await axios.put('http://localhost:4567/users/:id',{
-            id:Id.id,
+        await axios.put('http://localhost:4567/users/'+Id.id,{
             nombre:datosFormulario.nombre,
             apellido:datosFormulario.apellido            
         })
         .then(function (res) {
-            console.log("datos en return ",res);
+            console.log("datos en response ",res.data);
             setCargando(false)
             return(res.data);
             
@@ -70,9 +69,9 @@ function NombreApellido()
     }
     const borrar = async (evento) => {
         evento.preventDefault()
-        await axios.delete('http://localhost:4567/users/:id',Id)
+        await axios.delete('http://localhost:4567/users/'+Id.id)
         .then(function (res) {
-            console.log("datos en return ",res);
+            console.log("datos en response ",res.data);
             setCargando(false)
             return(res.data);
             
