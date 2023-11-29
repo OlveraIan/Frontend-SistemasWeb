@@ -1,70 +1,94 @@
 import {TextField,Box,Button} from '@mui/material';
+// eslint-disable-next-line no-unused-vars
 import React,{useEffect,useState} from 'react';
 import axios from "axios";
 
-function NombreApellido() {
+function NombreApellido() 
+{
     
     const [Cargando, setCargando] = useState(false)
+
     const [datosFormulario, setDatosFormulario] =useState({
         nombre:'',
         apellido:''
     })
-
-    const hacerPeticion = async () =>{
-        try {
-            const response = await axios.post('http://localhost:4567/users/')
-            console.log(response.data)
-            return response.data
-        } catch (error) {
-            throw error
-            
-        }
-    } 
+    const [Id, setId] =useState({
+        id:''
+    })
 
     const crear = async (evento) => {
         evento.preventDefault()
-        console.log("Datos recuperados del formulario", datosFormulario)
-        try {
-            const response = await hacerPeticion()
-            console.log("salida",response.nombre)
+        
+        console.log("nombre ",datosFormulario.nombre)
+        console.log("apellido ",datosFormulario.apellido)
+        // eslint-disable-next-line no-useless-catch
+        setCargando(true)
+        await axios.post('http://localhost:4567/users/',datosFormulario)
+        .then(function (res) {
+            console.log("datos en return ",res);
             setCargando(false)
-
-        } catch (error) {
+            return(res.data);
             
-        }
+        })
+        .catch(function(error){
+            console.log(error);
+            setCargando(false);
+        });            
     }
     const leer = async (evento) => {
         evento.preventDefault()
-        console.log("Datos leidos", datosFormulario)
-        try {
+        await axios.get('http://localhost:4567/users/',Id)
+        .then(function (res) {
+            console.log("datos en return ",res);
+            setCargando(false)
+            return(res.data);
             
-        } catch (error) {
-            
-        }
+        })
+        .catch(function(error){
+            console.log(error);
+            setCargando(false);
+        });   
     }
     const actualizar = async (evento) => {
         evento.preventDefault()
-        console.log("Datos actualizados", datosFormulario)
-        try {
+        await axios.put('http://localhost:4567/users/:id',{
+            id:Id.id,
+            nombre:datosFormulario.nombre,
+            apellido:datosFormulario.apellido            
+        })
+        .then(function (res) {
+            console.log("datos en return ",res);
+            setCargando(false)
+            return(res.data);
             
-        } catch (error) {
-            
-        }
+        })
+        .catch(function(error){
+            console.log(error);
+            setCargando(false);
+        });    
+        
     }
     const borrar = async (evento) => {
         evento.preventDefault()
-        console.log("Datos borrados", datosFormulario)
-        try {
+        await axios.delete('http://localhost:4567/users/:id',Id)
+        .then(function (res) {
+            console.log("datos en return ",res);
+            setCargando(false)
+            return(res.data);
             
-        } catch (error) {
-            
-        }
+        })
+        .catch(function(error){
+            console.log(error);
+            setCargando(false);
+        });    
     }
 
     const cambiosFormulario = (evento) => {
         const {name, value} = evento.target
         setDatosFormulario({...datosFormulario,[name]:value})
+        setId({...Id,[name]:value})
     }
+
     return(
         <>
             <h1>Registro Nombre y Apellido</h1>
@@ -93,6 +117,18 @@ function NombreApellido() {
                     ></TextField>
                 </Box>
                 <Box m={5}>
+                    <TextField
+                    label= 'Id:'
+                    variant='outlined'
+                    fullWidth
+                    /* en cambios al formulario, actualizar los datos del portador de los datos */
+                    onChange = {cambiosFormulario}
+                    value={Id.id}
+                    name= 'id'
+                    >
+                    </TextField>
+                </Box>
+                <Box m={5}>
                     <Button
                     variant='contained'
                     type='create'
@@ -116,17 +152,7 @@ function NombreApellido() {
                         Leer Valores
                     </Button>
                 </Box>
-                <Box m={5}>
-                    <TextField
-                    label= 'Id:'
-                    variant='outlined'
-                    fullWidth
-                    /* en cambios al formulario, actualizar los datos del portador de los datos */
-                    onChange = {cambiosFormulario}
-                    name= 'idLeer'
-                    >
-                    </TextField>
-                </Box>
+                
                 <Box m={5}>
                     <Button
                     variant='contained'
@@ -141,17 +167,6 @@ function NombreApellido() {
                     </Button>
                 </Box>
                 <Box m={5}>
-                    <TextField
-                    label= 'Id:'
-                    variant='outlined'
-                    fullWidth
-                    /* en cambios al formulario, actualizar los datos del portador de los datos */
-                    onChange = {cambiosFormulario}
-                    name= 'idActualizar'
-                    >
-                    </TextField>
-                </Box>
-                <Box m={5}>
                     <Button
                     variant='contained'
                     type='delete'
@@ -162,17 +177,6 @@ function NombreApellido() {
                     >
                         Borrar Valores
                     </Button>
-                </Box>
-                <Box m={5}>
-                    <TextField
-                    label= 'Id:'
-                    variant='outlined'
-                    fullWidth
-                    /* en cambios al formulario, actualizar los datos del portador de los datos */
-                    onChange = {cambiosFormulario}
-                    name= 'idBorrar'
-                    >
-                    </TextField>
                 </Box>
             </form>
         </>
